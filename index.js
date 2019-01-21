@@ -276,7 +276,7 @@ class Search extends PureComponent {
               borderRadius: this.props.inputBorderRadius
             },
             {
-              width: this.inputFocusWidthAnimated,
+              width: this.state.expanded ? "83%" : "100%",
               [isRtl ? 'paddingRight' : 'paddingLeft']: this.inputFocusPlaceholderAnimated
             },
             this.props.shadowVisible && {
