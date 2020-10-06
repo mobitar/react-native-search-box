@@ -512,12 +512,7 @@ Search.propTypes = {
   titleCancelColor: PropTypes.string,
   tintColorSearch: PropTypes.string,
   tintColorDelete: PropTypes.string,
-  inputStyle: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.object,
-    ViewPropTypes.style,
-    Text.propTypes.style
-  ]),
+  inputStyle: Text.propTypes.style,
   direction: PropTypes.oneOf(['ltr', 'rtl']),
   cancelButtonStyle: PropTypes.oneOfType([
     PropTypes.number,
