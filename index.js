@@ -133,6 +133,18 @@ class Search extends PureComponent {
   };
 
   /**
+   * onBlur
+   * async await
+   */
+  onBlur = async () => {
+    this.props.beforeBlur && (await this.props.beforeBlur());
+    await this.setState({ expanded: false });
+    await this.collapseAnimation(true);
+    this.props.onBlur && (await this.props.onBlur());
+    this.props.afterBlur && (await this.props.afterBlur());
+  };
+
+  /**
    * focus
    * async await
    */
@@ -310,6 +322,7 @@ class Search extends PureComponent {
           keyboardAppearance={this.props.keyboardAppearance || 'default'}
           autoCapitalize={this.props.autoCapitalize}
           onFocus={this.onFocus}
+          onBlur={this.onBlur}
           underlineColorAndroid="transparent"
           accessibilityTraits="search"
         />
@@ -463,6 +476,15 @@ Search.propTypes = {
   beforeFocus: PropTypes.func,
   onFocus: PropTypes.func,
   afterFocus: PropTypes.func,
+
+  /**
+   * onBlur
+   * return a Promise
+   * beforeBlur, onBlur, afterBlur
+   */
+  beforeBlur: PropTypes.func,
+  onBlur: PropTypes.func,
+  afterBlur: PropTypes.func,
 
   /**
    * onSearch
