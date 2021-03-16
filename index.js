@@ -8,8 +8,6 @@ import {
   Animated,
   Dimensions,
   Keyboard,
-  Image,
-  View,
   ViewPropTypes
 } from 'react-native';
 
@@ -73,10 +71,9 @@ class Search extends PureComponent {
   }
 
   componentDidMount() {
-    if(this.autoFocus) {
-      this.setState({expanded: true})
+    if (this.autoFocus) {
+      this.setState({ expanded: true })
       this.inputRef.current.focus();
-
     }
   }
 
@@ -129,11 +126,7 @@ class Search extends PureComponent {
    */
   onFocus = async () => {
     this.props.beforeFocus && (await this.props.beforeFocus());
-    this.inputRef.current &&
-      (await this.inputRef.current.focus());
-    await this.setState(prevState => {
-      return { expanded: !prevState.expanded };
-    });
+    await this.setState({ expanded: true });
     await this.expandAnimation();
     this.props.onFocus && (await this.props.onFocus(this.state.keyword));
     this.props.afterFocus && (await this.props.afterFocus());
@@ -173,9 +166,7 @@ class Search extends PureComponent {
   onCancel = async () => {
     this.props.beforeCancel && (await this.props.beforeCancel());
     await this.setState({ keyword: '' });
-    await this.setState(prevState => {
-      return { expanded: !prevState.expanded };
-    });
+    await this.setState({ expanded: true });
     await this.collapseAnimation(true);
     this.props.onCancel && (await this.props.onCancel());
     this.props.afterCancel && (await this.props.afterCancel());
