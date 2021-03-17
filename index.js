@@ -96,7 +96,7 @@ class Search extends PureComponent {
     this.props.beforeSearch &&
       (await this.props.beforeSearch(this.state.keyword));
     if (this.props.keyboardShouldPersist === false) {
-      await Keyboard.dismiss();
+      Keyboard.dismiss();
     }
     this.props.onSearch && (await this.props.onSearch(this.state.keyword));
     this.props.afterSearch &&
@@ -108,14 +108,12 @@ class Search extends PureComponent {
    * async await
    */
   onChangeText = async text => {
-    await this.setState({ keyword: text });
-    await new Promise((resolve, reject) => {
-      Animated.timing(this.iconDeleteAnimated, {
-        toValue: text.length > 0 ? 1 : 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start(() => resolve());
-    });
+    this.setState({ keyword: text });
+    Animated.timing(this.iconDeleteAnimated, {
+      toValue: text.length > 0 ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
     this.props.onChangeText &&
       (await this.props.onChangeText(this.state.keyword));
   };
@@ -126,8 +124,8 @@ class Search extends PureComponent {
    */
   onFocus = async () => {
     this.props.beforeFocus && (await this.props.beforeFocus());
-    await this.setState({ expanded: true });
-    await this.expandAnimation();
+    this.setState({ expanded: true });
+    this.expandAnimation();
     this.props.onFocus && (await this.props.onFocus(this.state.keyword));
     this.props.afterFocus && (await this.props.afterFocus());
   };
@@ -138,19 +136,18 @@ class Search extends PureComponent {
    */
   onBlur = async () => {
     this.props.beforeBlur && (await this.props.beforeBlur());
-    await this.setState({ expanded: false });
-    await this.collapseAnimation(true);
+    this.setState({ expanded: false });
+    this.collapseAnimation(true);
     this.props.onBlur && (await this.props.onBlur());
     this.props.afterBlur && (await this.props.afterBlur());
   };
 
   /**
    * focus
-   * async await
    */
-  focus = async (text = '') => {
-    await this.setState({ keyword: text });
-    await this.inputRef.current.focus();
+  focus = (text = '') => {
+    this.setState({ keyword: text });
+    this.inputRef.current.focus();
   };
 
   /**
@@ -159,14 +156,12 @@ class Search extends PureComponent {
    */
   onDelete = async () => {
     this.props.beforeDelete && (await this.props.beforeDelete());
-    await new Promise((resolve, reject) => {
-      Animated.timing(this.iconDeleteAnimated, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true
-      }).start(() => resolve());
-    });
-    await this.setState({ keyword: '' });
+    Animated.timing(this.iconDeleteAnimated, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true
+    }).start();
+    this.setState({ keyword: '' });
     this.props.onDelete && (await this.props.onDelete());
     this.props.afterDelete && (await this.props.afterDelete());
   };
@@ -177,94 +172,88 @@ class Search extends PureComponent {
    */
   onCancel = async () => {
     this.props.beforeCancel && (await this.props.beforeCancel());
-    await this.setState({ keyword: '' });
-    await this.setState({ expanded: true });
-    await this.collapseAnimation(true);
+    this.collapseAnimation(true);
+    this.setState({ keyword: '' });
+    this.setState({ expanded: true });
     this.props.onCancel && (await this.props.onCancel());
     this.props.afterCancel && (await this.props.afterCancel());
   };
 
   expandAnimation = () => {
-    return new Promise((resolve, reject) => {
-      Animated.parallel([
-        Animated.timing(this.inputFocusWidthAnimated, {
-          toValue: this.contentWidth - this.cancelButtonWidth,
-          duration: 200,
-          useNativeDriver: true,
-        }).start(),
-        Animated.timing(this.btnCancelAnimated, {
-          toValue: 10,
-          duration: 200,
-          useNativeDriver: false,
-        }).start(),
-        Animated.timing(this.inputFocusPlaceholderAnimated, {
-          toValue: this.props.placeholderExpandedMargin,
-          duration: 200,
-          useNativeDriver: false,
-        }).start(),
-        Animated.timing(this.iconSearchAnimated, {
-          toValue: this.props.searchIconExpandedMargin,
-          duration: 200,
-          useNativeDriver: false,
-        }).start(),
-        Animated.timing(this.iconDeleteAnimated, {
-          toValue: this.state.keyword.length > 0 ? 1 : 0,
-          duration: 200,
-          useNativeDriver: true,
-        }).start(),
-        Animated.timing(this.shadowOpacityAnimated, {
-          toValue: this.props.shadowOpacityExpanded,
-          duration: 200,
-          useNativeDriver: false,
-        }).start()
-      ]);
-      this.shadowHeight = this.props.shadowOffsetHeightExpanded;
-      resolve();
-    });
+    Animated.parallel([
+      Animated.timing(this.inputFocusWidthAnimated, {
+        toValue: this.contentWidth - this.cancelButtonWidth,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(),
+      Animated.timing(this.btnCancelAnimated, {
+        toValue: 10,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(),
+      Animated.timing(this.inputFocusPlaceholderAnimated, {
+        toValue: this.props.placeholderExpandedMargin,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(),
+      Animated.timing(this.iconSearchAnimated, {
+        toValue: this.props.searchIconExpandedMargin,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(),
+      Animated.timing(this.iconDeleteAnimated, {
+        toValue: this.state.keyword.length > 0 ? 1 : 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(),
+      Animated.timing(this.shadowOpacityAnimated, {
+        toValue: this.props.shadowOpacityExpanded,
+        duration: 200,
+        useNativeDriver: false,
+      }).start()
+    ]);
+    this.shadowHeight = this.props.shadowOffsetHeightExpanded;
   };
 
   collapseAnimation = (isForceAnim = false) => {
-    return new Promise((resolve, reject) => {
-      Animated.parallel([
-        this.props.keyboardShouldPersist === false ? Keyboard.dismiss() : null,
-        Animated.timing(this.inputFocusWidthAnimated, {
-          toValue: this.contentWidth - 10,
-          duration: 200,
-          useNativeDriver: false,
-        }).start(),
-        Animated.timing(this.btnCancelAnimated, {
-          toValue: this.contentWidth,
-          duration: 200,
-          useNativeDriver: false,
-        }).start(),
-        this.props.keyboardShouldPersist === false
-          ? Animated.timing(this.inputFocusPlaceholderAnimated, {
-              toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
-              duration: 200,
-              useNativeDriver: false,
-            }).start()
-          : null,
-        this.props.keyboardShouldPersist === false || isForceAnim === true
-          ? Animated.timing(this.iconSearchAnimated, {
-              toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
-              duration: 200,
-              useNativeDriver: false,
-            }).start()
-          : null,
-        Animated.timing(this.iconDeleteAnimated, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }).start(),
-        Animated.timing(this.shadowOpacityAnimated, {
-          toValue: this.props.shadowOpacityCollapsed,
-          duration: 200,
-          useNativeDriver: true,
-        }).start()
-      ]);
-      this.shadowHeight = this.props.shadowOffsetHeightCollapsed;
-      resolve();
-    });
+    Animated.parallel([
+      this.props.keyboardShouldPersist === false ? Keyboard.dismiss() : null,
+      Animated.timing(this.inputFocusWidthAnimated, {
+        toValue: this.contentWidth - 10,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(),
+      Animated.timing(this.btnCancelAnimated, {
+        toValue: this.contentWidth,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(),
+      this.props.keyboardShouldPersist === false
+        ? Animated.timing(this.inputFocusPlaceholderAnimated, {
+            toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
+            duration: 200,
+            useNativeDriver: false,
+          }).start()
+        : null,
+      this.props.keyboardShouldPersist === false || isForceAnim === true
+        ? Animated.timing(this.iconSearchAnimated, {
+            toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
+            duration: 200,
+            useNativeDriver: false,
+          }).start()
+        : null,
+      Animated.timing(this.iconDeleteAnimated, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(),
+      Animated.timing(this.shadowOpacityAnimated, {
+        toValue: this.props.shadowOpacityCollapsed,
+        duration: 200,
+        useNativeDriver: true,
+      }).start()
+    ]);
+    this.shadowHeight = this.props.shadowOffsetHeightCollapsed;
   };
 
   render() {
