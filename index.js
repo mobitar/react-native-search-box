@@ -209,7 +209,7 @@ class Search extends PureComponent {
       Animated.timing(this.shadowOpacityAnimated, {
         toValue: this.props.shadowOpacityExpanded,
         duration: 200,
-        useNativeDriver: false,
+        useNativeDriver: true,
       })
     ]).start();
     this.shadowHeight = this.props.shadowOffsetHeightExpanded;
@@ -221,7 +221,7 @@ class Search extends PureComponent {
       Animated.timing(this.inputFocusWidthAnimated, {
         toValue: this.contentWidth - 10,
         duration: 200,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
       Animated.timing(this.btnCancelAnimated, {
         toValue: this.contentWidth,
