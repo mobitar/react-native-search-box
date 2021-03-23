@@ -136,8 +136,12 @@ class Search extends PureComponent {
    */
   onBlur = async () => {
     this.props.beforeBlur && (await this.props.beforeBlur());
-    this.setState({ expanded: false });
-    this.collapseAnimation(true);
+
+    if (collapseOnBlur) {
+      this.setState({ expanded: false });
+      this.collapseAnimation(true);
+    }
+
     this.props.onBlur && (await this.props.onBlur());
     this.props.afterBlur && (await this.props.afterBlur());
   };
@@ -547,6 +551,7 @@ Search.propTypes = {
   blurOnSubmit: PropTypes.bool,
   keyboardShouldPersist: PropTypes.bool,
   useClearButton: PropTypes.bool,
+  collapseOnBlur: PropTypes.bool,
 
   /**
    * Positioning
@@ -589,6 +594,7 @@ Search.defaultProps = {
   shadowVisible: false,
   useClearButton: true,
   direction: 'ltr',
+  collapseOnBlur: true,
 };
 
 export default Search;
