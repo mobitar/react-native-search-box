@@ -115,7 +115,7 @@ class Search extends PureComponent {
       useNativeDriver: true,
     }).start();
     this.props.onChangeText &&
-      (await this.props.onChangeText(this.state.keyword));
+      (await this.props.onChangeText(text));
   };
 
   /**
